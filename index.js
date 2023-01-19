@@ -6,7 +6,7 @@ const cors = require("cors")
 require("dotenv").config()
 const {userRouter} = require("./routes/user.route")
 const {authentication} = require("./middleware/authentication")
-
+const {bugRouter} = require("./routes/Bug.route")
 
 app.use(cors({
     origin:"*"
@@ -17,6 +17,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/",userRouter)
+app.use("/bug",bugRouter)
 
 app.listen(process.env.PORT,async ()=>{
   try{
