@@ -7,20 +7,20 @@ var jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 userRouter.post("/signup", async (req, res) => {
-  let { email, password } = req.body;
+  let { name, email, password,timestamp} = req.body;
   let userexits = await UserModel.findOne({ email });
   if (userexits) {
     res.send({ msg: "email already exits try with another" });
   } else {
     try {
       bcrypt.hash(password, 5, async function (err, hash) {
-        const userData = new UserModel({ email, password: hash });
+        const userData = new UserModel({ email, password: hash ,name,timestamp});
         await userData.save();
-        res.send("signup successfully");
+        res.send(userData);
       });
     } catch (err) {
       console.log(err);
-      res.send({ msg: "Something went wrong, pls try again later" });
+      res.send({ msg: "Something went wrong,try again" });
     }
   }
 });
@@ -34,16 +34,16 @@ userRouter.post("/login", async (req, res) => {
       bcrypt.compare(password, hashed_password, function (err, result) {
         if (result) {
           const token = jwt.sign({ userID: user[0]._id }, `${process.env.KEY}`);
-          res.send({ msg: "Login successfull", token: token });
+          res.send({ msg: "Login successfully", token: token });
         } else {
-          res.send("login failed Try Again");
+          res.send("login failed please Try Again");
         }
       });
     } else {
-      res.send("login failed Try Again");
+      res.send("login failed please Try Again");
     }
   } catch (err) {
-    res.send("login failed Try Again");
+    res.send("login failed please Try Again");
   }
 });
 
